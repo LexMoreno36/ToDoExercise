@@ -13,7 +13,7 @@
 </head>
 <body>
 
-    <div class="container body-content">
+    <div class="container body-content" ">
         @RenderBody()
     </div>
 
@@ -25,11 +25,13 @@
                     return {
                     }
                 },
-                props: {
-                    pName: "",
-                    pSurname: "",
-                    pDescription: "",
-                },
+                props: ["pName", "pSurname", "pDescription",],
+                //methods: {
+                //    deleteCard() {
+                //        this.deleted = true;
+                //        window.localStorage.removeItem('forms');
+                //    }
+                //},
                 template: "#taskCardTemplate",
             })
 
@@ -37,28 +39,36 @@
                 el: "#app",
                 data() {
                     return {
-                        form: {
-                            name: "",
-                            surnames: "",
-                            description: ""
-                        },
-                        deleted: false
+                        forms: [
+                        ],
+
                     }
                 },
                 methods: {
-                    deleteCard() {
-                        this.deleted = true;
-                        window.localStorage.removeItem('form');
+                    deleteCard(index) {
+                        console.log(index)
+                        
+                        /*var temporalForms = []*/
+                        var temporalForms = JSON.parse(window.localStorage.getItem('forms'))
+                        temporalForms.splice(index, 1)
+                        this.forms = temporalForms
+                        window.localStorage.setItem('forms', JSON.stringify(temporalForms));
+
+                    },
+                    createCard() {
+                        var emptyCardObject = { title: "", name: "", surnames: "", description: "" }
+                        this.forms.push(emptyCardObject)
                     }
                 },
                 mounted() {
-                    if(window.localStorage.getItem('form'))
-                    this.form = JSON.parse(window.localStorage.getItem('form'))
+                    if (window.localStorage.getItem('forms')) {
+                        this.forms = JSON.parse(window.localStorage.getItem('forms'))
+                    }
                 }
             })
 
-            vm.$watch('form', (lastestValue, beforeValue) => {
-                window.localStorage.setItem('form', JSON.stringify(lastestValue));
+            vm.$watch('forms', (lastestValue, beforeValue) => {
+                window.localStorage.setItem('forms', JSON.stringify(lastestValue));
             }, { deep: true })
         </script>
     </footer>
