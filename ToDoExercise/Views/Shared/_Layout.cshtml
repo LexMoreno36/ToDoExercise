@@ -19,6 +19,20 @@
 
     <footer>
         <script>
+
+            Vue.component('taskCard', {
+                data() {
+                    return {
+                    }
+                },
+                props: {
+                    pName: "",
+                    pSurname: "",
+                    pDescription: "",
+                },
+                template: "#taskCardTemplate",
+            })
+
             var vm = new Vue({
                 el: "#app",
                 data() {
