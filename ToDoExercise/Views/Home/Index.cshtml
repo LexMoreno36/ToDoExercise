@@ -6,32 +6,38 @@
     <h2>ToDo - tasks</h2>
     <hr />
 
-    <button type="button" class="btn btn-primary" v-on:click="createCard" >Create task</button>
+    <button type="button" class="btn btn-primary" v-on:click="createCard">Create task</button>
 
     <div class="form-container container">
 
-        <form v-for="(form, index) in forms"class="card card-body classTaskCard" style="width: 10px; padding:30px 20px;" v-on:submit.prevent="onSubmit">
-            <div class="mb-3">
-                <label class="form-label">Title</label>
-                <input type="text" class="form-control" name="title" v-model="form.title">
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Name</label>
-                <input type="text" class="form-control" name="name" v-model="form.name">
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Surname</label>
-                <input type="text" class="form-control" name="surnames" v-model="form.surnames">
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Task description</label>
-                <textarea class="form-control" name="description" rows="3" v-model="form.description"></textarea>
-            </div>
-            <button v-on:click="deleteCard(index)" type="button" class="btn btn-danger" style="margin: 30px 20px 0px 20px ">Delete Task</button>
-        </form>
+        @*<form v-for="(form, index) in forms"class="card card-body classTaskCard" style="width: 10px; padding:30px 20px;" v-on:submit.prevent="onSubmit">
+                <div class="mb-3">
+                    <label class="form-label">Title</label>
+                    <input type="text" class="form-control" name="title" v-model="form.title">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Name</label>
+                    <input type="text" class="form-control" name="name" v-model="form.name">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Surname</label>
+                    <input type="text" class="form-control" name="surnames" v-model="form.surnames">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Task description</label>
+                    <textarea class="form-control" name="description" rows="3" v-model="form.description"></textarea>
+                </div>
+                <button v-on:click="deleteCard(index)" type="button" class="btn btn-danger" style="margin: 30px 20px 0px 20px ">Delete Task</button>
+            </form>*@
 
 
-        @*<task-card pName="" pSurnames="" pDescription="" ></task-card>*@
+        <task-card p-title=""
+                   p-name=""
+                   p-surnames=""
+                   p-description=""
+                   v-for="(form, index) in forms">
+
+        </task-card>
 
 
 
@@ -39,20 +45,24 @@
 
         <script type="text/x-template" id="taskCardTemplate">
 
-            <form class="card card-body classTaskCard" style="width: 23rem; padding:30px 20px;" v-on:submit.prevent="onSubmit" v-if="deleted === false">
+            <form v-for="(form, index) in forms" class="card card-body classTaskCard" style="width: 10px; padding:30px 20px;" v-on:submit.prevent="onSubmit">
+                <div class="mb-3">
+                    <label class="form-label">Title</label>
+                    <input type="text" class="form-control" name="title" v-model="form.title">
+                </div>
                 <div class="mb-3">
                     <label class="form-label">Name</label>
-                    <input type="text" class="form-control" name="name" v-model="forms.name">
+                    <input type="text" class="form-control" name="name" v-model="form.name">
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Surname</label>
-                    <input type="text" class="form-control" name="surnames" v-model="forms.surnames">
+                    <input type="text" class="form-control" name="surnames" v-model="form.surnames">
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Task description</label>
-                    <textarea class="form-control" name="description" rows="3" v-model="forms.description"></textarea>
+                    <textarea class="form-control" name="description" rows="3" v-model="form.description"></textarea>
                 </div>
-                <button v-on:click="deleteCard" type="button" class="btn btn-danger" style="margin: 30px 20px 0px 20px ">Delete Task</button>
+                <button v-on:click="deleteCard(index)" type="button" class="btn btn-danger" style="margin: 30px 20px 0px 20px ">Delete Task</button>
             </form>
 
         </script>

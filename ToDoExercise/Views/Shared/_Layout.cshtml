@@ -25,36 +25,28 @@
                     return {
                     }
                 },
-                props: ["pName", "pSurname", "pDescription",],
-                //methods: {
-                //    deleteCard() {
-                //        this.deleted = true;
-                //        window.localStorage.removeItem('forms');
-                //    }
-                //},
+                props: ["p-title", "p-name", "p-surname", "p-description",],
                 template: "#taskCardTemplate",
-            })
-
-            var vm = new Vue({
-                el: "#app",
-                data() {
-                    return {
-                        forms: [
-                        ],
-
-                    }
-                },
                 methods: {
                     deleteCard(index) {
-                        console.log(index)
-                        
-                        /*var temporalForms = []*/
                         var temporalForms = JSON.parse(window.localStorage.getItem('forms'))
                         temporalForms.splice(index, 1)
                         this.forms = temporalForms
                         window.localStorage.setItem('forms', JSON.stringify(temporalForms));
 
                     },
+
+                },
+            })
+
+            var vm = new Vue({
+                el: "#app",
+                data() {
+                    return {
+                        forms: [],
+                    }
+                },
+                methods: {
                     createCard() {
                         var emptyCardObject = { title: "", name: "", surnames: "", description: "" }
                         this.forms.push(emptyCardObject)
