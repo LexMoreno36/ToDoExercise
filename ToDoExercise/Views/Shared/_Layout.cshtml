@@ -25,31 +25,36 @@
                     return {
                     }
                 },
-                props: ["p-title", "p-name", "p-surname", "p-description",],
+                props: ["p-title", "p-name", "p-surnames", "p-description",],
                 template: "#taskCardTemplate",
                 methods: {
-                    deleteCard(index) {
-                        var temporalForms = JSON.parse(window.localStorage.getItem('forms'))
-                        temporalForms.splice(index, 1)
-                        this.forms = temporalForms
-                        window.localStorage.setItem('forms', JSON.stringify(temporalForms));
-
+                    deleteCard() {
+                        this.$emit('delete()');
                     },
+                    changed() {
+                        this.$emit("formUptdated", )
+                    }
 
                 },
+                watch: {
+
+                }
             })
 
             var vm = new Vue({
                 el: "#app",
                 data() {
                     return {
-                        forms: [],
+                        forms: [{ title: "", name: "", surnames: "", description: "" }],
                     }
                 },
                 methods: {
                     createCard() {
                         var emptyCardObject = { title: "", name: "", surnames: "", description: "" }
                         this.forms.push(emptyCardObject)
+                    },
+                    parentDelete() {
+
                     }
                 },
                 mounted() {
@@ -59,9 +64,9 @@
                 }
             })
 
-            vm.$watch('forms', (lastestValue, beforeValue) => {
-                window.localStorage.setItem('forms', JSON.stringify(lastestValue));
-            }, { deep: true })
+            //vm.$watch('forms', (lastestValue, beforeValue) => {
+            //    window.localStorage.setItem('forms', JSON.stringify(lastestValue));
+            //}, { deep: true })
         </script>
     </footer>
 
