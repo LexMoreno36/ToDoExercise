@@ -56,10 +56,11 @@
                         var emptyCardObject = { title: "", name: "", surnames: "", description: "" }
                         this.forms.push(emptyCardObject)
                     },
-                    parentDelete(e) {
-                        console.log(e)
-                        console.log(this.forms[e])
-                        this.forms.splice(e, 1)
+                    parentDelete(i) {
+                        var temporalForms = JSON.parse(window.localStorage.getItem('forms'))
+                        temporalForms.splice(i, 1)
+                        window.localStorage.setItem('forms', JSON.stringify(temporalForms))
+                        this.forms = JSON.parse(window.localStorage.getItem('forms'))
                     },
                     parentUpdate(t, n, s, d, i) {
                         this.forms[i].title = t
