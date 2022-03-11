@@ -23,29 +23,32 @@
             Vue.component('taskCard', {
                 data() {
                     return {
+                        pTitleData: this.pTitle,
+                        pNameData: this.pName,
+                        pSurnamesData: this.pSurnames,
+                        pDescriptionData: this.pDescription,
+                        pIndexData: this.pIndex
                     }
                 },
-                props: ["p-title", "p-name", "p-surnames", "p-description",],
+                props: ["p-title", "p-name", "p-surnames", "p-description", "p-index"],
                 template: "#taskCardTemplate",
                 methods: {
                     deleteCard() {
-                        this.$emit('delete()');
+                        this.$emit('delete', this.pIndex);
                     },
                     changed() {
-                        this.$emit("formUptdated", )
+                        this.$emit('update', this.pTitleData, this.pNameData, this.pSurnamesData, this.pDescriptionData, this.pIndexData)
                     }
 
                 },
-                watch: {
 
-                }
             })
 
             var vm = new Vue({
                 el: "#app",
                 data() {
                     return {
-                        forms: [{ title: "", name: "", surnames: "", description: "" }],
+                        forms: [],
                     }
                 },
                 methods: {
@@ -53,8 +56,17 @@
                         var emptyCardObject = { title: "", name: "", surnames: "", description: "" }
                         this.forms.push(emptyCardObject)
                     },
-                    parentDelete() {
-
+                    parentDelete(e) {
+                        console.log(e)
+                        console.log(this.forms[e])
+                        this.forms.splice(e, 1)
+                    },
+                    parentUpdate(t, n, s, d, i) {
+                        this.forms[i].title = t
+                        this.forms[i].name = n
+                        this.forms[i].surnames = s
+                        this.forms[i].description = d
+                        window.localStorage.setItem('forms',  JSON.stringify(this.forms))
                     }
                 },
                 mounted() {
@@ -64,9 +76,9 @@
                 }
             })
 
-            //vm.$watch('forms', (lastestValue, beforeValue) => {
-            //    window.localStorage.setItem('forms', JSON.stringify(lastestValue));
-            //}, { deep: true })
+                                            //vm.$watch('forms', (lastestValue, beforeValue) => {
+                                            //    window.localStorage.setItem('forms', JSON.stringify(lastestValue));
+                                            //}, { deep: true })
         </script>
     </footer>
 

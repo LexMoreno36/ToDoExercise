@@ -10,12 +10,14 @@
 
     <div class="form-container container">
 
-        <task-card v-for="form in forms"
+        <task-card v-for="(form, index) in forms"
                    :p-title="form.title"
                    :p-name="form.name"
                    :p-surnames="form.surnames"
                    :p-description="form.description"
-                   v-on:delete="parentDelete">
+                   :p-index="index"
+                   v-on:delete="parentDelete"
+                   v-on:update="parentUpdate">
 
         </task-card>
 
@@ -26,22 +28,22 @@
 
         <script type="text/x-template" id="taskCardTemplate">
 
-            <form class="card card-body classTaskCard" style="width: 10px; padding:30px 20px;" v-on:submit.prevent="onSubmit" v-on:keyup="changed">
+            <form class="card card-body classTaskCard" style="width: 10px; padding:30px 20px;">
                 <div class="mb-3">
                     <label class="form-label">Title</label>
-                    <input type="text" class="form-control" name="title">
+                    <input type="text" class="form-control" name="title" v-model="pTitleData" v-on:keyup="changed">
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Name</label>
-                    <input type="text" class="form-control" name="name">
+                    <input type="text" class="form-control" name="name" v-model="pNameData" v-on:keyup="changed">
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Surname</label>
-                    <input type="text" class="form-control" name="surnames">
+                    <input type="text" class="form-control" name="surnames" v-model="pSurnamesData" v-on:keyup="changed">
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Task description</label>
-                    <textarea class="form-control" name="description" rows="3"></textarea>
+                    <textarea class="form-control" name="description" rows="3" v-model="pDescriptionData" v-on:keyup="changed"></textarea>
                 </div>
                 <button v-on:click="deleteCard" type="button" class="btn btn-danger" style="margin: 30px 20px 0px 20px ">Delete Task</button>
             </form>
