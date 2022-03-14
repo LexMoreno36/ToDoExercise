@@ -10,12 +10,11 @@
 
     <div class="form-container container">
 
-        <task-card v-for="(form, index) in forms"
+        <task-card v-for="form in forms"
                    :p-title="form.title"
-                   :p-name="form.name"
-                   :p-surnames="form.surnames"
                    :p-description="form.description"
-                   :p-index="index"
+                   :p-id="form.id"
+                   :key="form.id"
                    v-on:delete="parentDelete"
                    v-on:update="parentUpdate">
 
@@ -32,14 +31,6 @@
                 <div class="mb-3">
                     <label class="form-label">Title</label>
                     <input type="text" class="form-control" name="title" v-model="pTitleData" v-on:keyup="changed">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Name</label>
-                    <input type="text" class="form-control" name="name" v-model="pNameData" v-on:keyup="changed">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Surname</label>
-                    <input type="text" class="form-control" name="surnames" v-model="pSurnamesData" v-on:keyup="changed">
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Task description</label>

@@ -24,72 +24,71 @@
                 data() {
                     return {
                         pTitleData: this.pTitle,
-                        pNameData: this.pName,
-                        pSurnamesData: this.pSurnames,
                         pDescriptionData: this.pDescription,
-                        pIndexData: this.pIndex,
+                        id: this.pId
                     }
                 },
-                props: ["p-title", "p-name", "p-surnames", "p-description", "p-index"],
+                props: ["p-title", "p-description", "p-id"],
                 template: "#taskCardTemplate",
                 methods: {
                     deleteCard() {
-
-                        this.$emit('delete', this.pIndex);
-                        
+                        this.$emit('delete', this.pId);
                     },
                     changed() {
-                        this.$emit('update', this.pTitleData, this.pNameData, this.pSurnamesData, this.pDescriptionData, this.pIndexData)
-                        
-                    }
-
+                        this.$emit('update', this.pTitleData, this.pDescriptionData, this.id)
+                    },
                 },
-
             })
-
-
             var vm = new Vue({
                 el: "#app",
                 data() {
                     return {
                         forms: [],
+                        counter: 0
                     }
                 },
                 methods: {
                     createCard() {
 
-                        var emptyCardObject = { title: "", name: "", surnames: "", description: ""}
+                        var emptyCardObject = { title: "", description: "", id: `${this.counter++}` }
                         this.forms.push(emptyCardObject)
-                        window.localStorage.setItem('forms', JSON.stringify(this.forms));
+                        window.localStorage.setItem('forms', JSON.stringify(this.forms))
+                        window.localStorage.setItem('counter', this.counter)
                     },
                     parentDelete(i) {
-                        this.forms = this.forms.filter((el) => el.index != i);
-                        //window.localStorage.removeItem('forms')
-                        window.localStorage.setItem('forms', JSON.stringify(this.forms));
-                        location.reload()
+                        var indexOf = this.forms.indexOf(this.forms.find(e => e.id == i))
+                        var temporalForms = JSON.parse(window.localStorage.getItem('forms'))
+                        temporalForms.splice(indexOf, 1)
+                        window.localStorage.setItem('forms', JSON.stringify(temporalForms))
+                        window.localStorage.setItem('counter', this.counter)
+                        this.forms = JSON.parse(window.localStorage.getItem('forms'))
+
                     },
-                    parentUpdate(title, name, surnames, description, i) {
-                        /* debugger;*/
-                        this.forms[i].index = i
-                        this.forms[i].title = title
-                        this.forms[i].name = name
-                        this.forms[i].surnames = surnames
-                        this.forms[i].description = description
+                    parentUpdate(title, description, i) {
 
                         
+                        var indexOf = this.forms.indexOf(this.forms.find(e => e.id == i))
+                        var formToEdit = this.forms.find(e => e.id == i)
+                        formToEdit.title = title
+                        formToEdit.description = description
+
+                        this.forms.splice(indexOf, 1, formToEdit)
+
                         window.localStorage.setItem('forms', JSON.stringify(this.forms))
-                    }
+                        window.localStorage.setItem('counter', this.counter)
+                    },
+
                 },
                 mounted() {
                     if (window.localStorage.getItem('forms')) {
                         this.forms = JSON.parse(window.localStorage.getItem('forms'))
+                        this.counter = window.localStorage.getItem('counter')
                     }
                 }
             })
-
-                                                            //vm.$watch('forms', (lastestValue, beforeValue) => {
-                                                            //    window.localStorage.setItem('forms', JSON.stringify(lastestValue));
-                                                            //}, { deep: true })
+                                                                            //vm.$watch('forms', (lastestValue, beforeValue) => {
+                                                                            //    window.localStorage.setItem('forms', JSON.stringify(lastestValue));
+                                                                            //}, { deep: true })
         </script>
     </footer>
 
