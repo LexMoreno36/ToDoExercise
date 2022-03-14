@@ -27,22 +27,26 @@
                         pNameData: this.pName,
                         pSurnamesData: this.pSurnames,
                         pDescriptionData: this.pDescription,
-                        pIndexData: this.pIndex
+                        pIndexData: this.pIndex,
                     }
                 },
                 props: ["p-title", "p-name", "p-surnames", "p-description", "p-index"],
                 template: "#taskCardTemplate",
                 methods: {
                     deleteCard() {
+
                         this.$emit('delete', this.pIndex);
+                        
                     },
                     changed() {
                         this.$emit('update', this.pTitleData, this.pNameData, this.pSurnamesData, this.pDescriptionData, this.pIndexData)
+                        
                     }
 
                 },
 
             })
+
 
             var vm = new Vue({
                 el: "#app",
@@ -53,21 +57,27 @@
                 },
                 methods: {
                     createCard() {
-                        var emptyCardObject = { title: "", name: "", surnames: "", description: "" }
+
+                        var emptyCardObject = { title: "", name: "", surnames: "", description: ""}
                         this.forms.push(emptyCardObject)
+                        window.localStorage.setItem('forms', JSON.stringify(this.forms));
                     },
                     parentDelete(i) {
-                        var temporalForms = JSON.parse(window.localStorage.getItem('forms'))
-                        temporalForms.splice(i, 1)
-                        window.localStorage.setItem('forms', JSON.stringify(temporalForms))
-                        this.forms = JSON.parse(window.localStorage.getItem('forms'))
+                        this.forms = this.forms.filter((el) => el.index != i);
+                        //window.localStorage.removeItem('forms')
+                        window.localStorage.setItem('forms', JSON.stringify(this.forms));
+                        location.reload()
                     },
-                    parentUpdate(t, n, s, d, i) {
-                        this.forms[i].title = t
-                        this.forms[i].name = n
-                        this.forms[i].surnames = s
-                        this.forms[i].description = d
-                        window.localStorage.setItem('forms',  JSON.stringify(this.forms))
+                    parentUpdate(title, name, surnames, description, i) {
+                        /* debugger;*/
+                        this.forms[i].index = i
+                        this.forms[i].title = title
+                        this.forms[i].name = name
+                        this.forms[i].surnames = surnames
+                        this.forms[i].description = description
+
+                        
+                        window.localStorage.setItem('forms', JSON.stringify(this.forms))
                     }
                 },
                 mounted() {
@@ -77,9 +87,9 @@
                 }
             })
 
-                                            //vm.$watch('forms', (lastestValue, beforeValue) => {
-                                            //    window.localStorage.setItem('forms', JSON.stringify(lastestValue));
-                                            //}, { deep: true })
+                                                            //vm.$watch('forms', (lastestValue, beforeValue) => {
+                                                            //    window.localStorage.setItem('forms', JSON.stringify(lastestValue));
+                                                            //}, { deep: true })
         </script>
     </footer>
 
