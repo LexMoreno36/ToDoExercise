@@ -4,9 +4,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - My ASP.NET Application</title>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-vue/2.21.2/bootstrap-vue.min.js" integrity="sha512-Z0dNfC81uEXC2iTTXtE0rM18I3ATkwn1m8Lxe0onw/uPEEkCmVZd+H8GTeYGkAZv50yvoSR5N3hoy/Do2hNSkw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link href="~/Content/cssStyles.css" rel="stylesheet" />
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
@@ -24,61 +27,76 @@
             Vue.component('modalComponent', {
                 data() {
                     return {
-                        modalTitleData: this.pTitle,
-                        modalDescriptionData: this.pDescription,
-                        modalNameData: this.pName,
-                        modalId: this.pId
+                        modalTitleData: this.mTitle,
+                        modalDescriptionData: this.mDescription,
+                        modalNameData: this.mName,
+                        modalIdData: this.mId,
                     }
                 },
-                props: ["p-title", "p-description", "p-name", "p-id"],
+                props: ["m-title", "m-description", "m-name", "m-id"],
                 template: "#modalTemplate",
                 methods: {
-                    //deleteCard() {
-                    //    this.$emit('delete', this.pId);
-                    //},
-                    changed() {
-                        this.$emit('update', this.pTitleData, this.pDescriptionData, this.pNameData, this.id)
-                    },
-                    saveTask() {
-                        this.$emit('persist', this.modalTitleData, this.modalDescriptionData, this.modalNameData, this.modalId)
-                        //console.log(this.$emit('persist', this.modalTitleData, this.modalDescriptionData, this.modalNameData, this.modalId))
+                    saveContent() {
+                        this.$emit('savecontent', this.modalTitleData, this.modalDescriptionData, this.modalNameData, this.modalIdData)
                     }
                 },
-            })
+                watch: {
+                    mTitle(val, oldVal) {
+                        if (val !== oldVal) { this.modalTitleData = val }
+                    },
+                    mDescription(val, oldVal) {
+                        if (val !== oldVal) { this.modalDescriptionData = val }
+                    },
+                    mName(val, oldVal) {
+                        if (val !== oldVal) { this.modalNameData = val }
+                    },
+                    mId(val, oldVal) {
+                        if (val !== oldVal) { this.modalIdData = val }
+                    },
 
+                }
+            })
 
             Vue.component('liTask', {
                 data() {
                     return {
-                        pTitleData: this.pTitle,
-                        pDescriptionData: this.pDescription,
-                        pNameData: this.pName,
-                        id: this.pId
+
+                        //pTitleData: this.pTitle,
+                        //pDescriptionData: this.pDescription,
+                        //pNameData: this.pName,
+                        //id: this.pId,
                     }
                 },
                 props: ["p-title", "p-description", "p-name", "p-id"],
                 template: "#liTaskCardTemplate",
                 methods: {
-                    persistTask(title, description, name, id) {
-                        this.$emit('persist-task-in-parent', title, description, name, id)
+                    openModal() {
+                        this.$emit('openmodal', this.pTitle, this.pDescription, this.pName, this.pId,)
+                    },
+                    deleteElement() {
+                        this.$emit('deleteelement', this.pId)
                     }
                 },
             })
-
-
 
             var vm = new Vue({
                 el: "#app",
                 data() {
                     return {
                         forms: [],
-                        counter: 0
+                        counter: 0,
+                        modalInput: {
+                            title: "", description: "", name: "", id: ""
+                        },
                     }
                 },
+
                 methods: {
 
                     createCard() {
-                        this.forms.push(this.createEmptyCardObject())
+                        var val = this.createEmptyCardObject()
+                        this.passId(val.title, val.description, val.name, val.id)
+                        this.forms.push(val)
                         this.saveLocal();
                     },
                     parentDelete(id) {
@@ -89,11 +107,14 @@
                         this.forms.splice(this.getIndexFromId(id), 1, this.editFormById(title, description, name, id))
                         this.saveLocal();
                     },
-                    persistTaskParent(title, description, name, id) {
-                        this.forms.splice(this.getIndexFromId(id), 1, this.editFormById(title, description, name, id))
-                        this.saveLocal();
-
+                    passId(title, description, name, id) {
+                        this.modalInput.id = id;
+                        this.modalInput.title = title;
+                        this.modalInput.name = name;
+                        this.modalInput.description = description;
+                        this.$forceUpdate();
                     },
+
 
 
                     saveLocal() {
@@ -117,24 +138,20 @@
                         return res
                     },
                     getLocalDate() {
-                        var date = new Date()
-                        return date
-                    },
-                    lastModified(date) {
-                        //var date = new Date()
-
-
+                        return new Date();
                     },
                     loadLocalData() {
                         if (window.localStorage.getItem('forms')) {
                             this.forms = JSON.parse(window.localStorage.getItem('forms'))
                             this.counter = window.localStorage.getItem('counter')
                         }
+                    },
+                    printSomething() {
+                        console.log("your call is working")
                     }
                 },
                 mounted() {
                     this.loadLocalData();
-                    //this.lastModified();
                 }
             })
         </script>

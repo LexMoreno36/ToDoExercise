@@ -2,88 +2,56 @@
 @{
     ViewBag.Title = "Index";
 }
-@* This is where we generate the li template *@
-
-
-
 <div id="app">
     <h2>ToDo - tasks</h2>
     <hr />
 
-    <button type="button" class="btn btn-primary" v-on:click="createCard">Create task</button>
+    <button type="button" class="btn btn-primary" v-on:click="createCard" data-toggle="modal" data-target="#modalId">Create task</button>
 
     <div class="form-container container">
 
-
-        <li-task v-for="form in forms"
+        <li-task v-for="form in forms" :key="form.id"
                  :p-title="form.title"
                  :p-description="form.description"
                  :p-name="form.name"
                  :p-id="form.id"
-                 v-on:persist-task-in-parent="persistTaskParent"></li-task>
+                 v-on:openmodal="passId"
+                 v-on:deleteelement="parentDelete">
+        </li-task>
+        <modal-component :m-id="modalInput.id"
+                         :m-title="modalInput.title"
+                         :m-description="modalInput.description"
+                         :m-name="modalInput.name"
+                         v-on:savecontent="parentUpdate">
 
-        @*<task-card v-for="form in forms"
-                       :p-title="form.title"
-                       :p-description="form.description"
-                       :p-name="form.name"
-                       :p-id="form.id"
-                       :key="form.id"
-                       v-on:delete="parentDelete"
-                       v-on:update="parentUpdate">
-
-            </task-card>*@
-
+        </modal-component>
 
     </div>
 </div>
 
-@* This is where we generate the template *@
-
-<script type="text/x-template" id="taskCardTemplate">
-
-    <form class="card card-body classTaskCard" style="width: 10px; padding:30px 20px;">
-        <div class="mb-3">
-            <label class="form-label">Title</label>
-            <input type="text" class="form-control" name="title" v-model="pTitleData" v-on:keyup="changed">
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Task description</label>
-            <textarea class="form-control" name="description" rows="3" v-model="pDescriptionData" v-on:keyup="changed"></textarea>
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Name</label>
-            <input type="text" class="form-control" name="name" v-model="pNameData" v-on:keyup="changed">
-        </div>
-
-        <button v-on:click="deleteCard" type="button" class="btn btn-danger" style="margin: 30px 20px 0px 20px ">Delete Task</button>
-    </form>
-
-</script>
-
 <script type="text/x-template" id="liTaskCardTemplate">
     <div>
-        <a :href="'#'+ id" data-toggle="modal" :data-target="'#'+ id" class="list-group-item list-group-item-action flex-column align-items-start">
-            <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1">{{pTitleData}}</h5>
-                @*<small>x days ago</small>*@
-            </div>
-            <p class="mb-1">{{pDescriptionData}}</p>
-            <small>{{pNameData}}</small>
-        </a>
-
-        <modal-component :id="id"
-                         :p-title="pTitleData"
-                         :p-description="pDescriptionData"
-                         :p-name="pNameData"
-                         :p-id="id"
-                         v-on:persist="persistTask">
-
-        </modal-component>
+        <div class="form-list list-group-item list-group-item-action ">
+            <nav>
+                <div>
+                    <h3 class="mb-1">{{pTitle}}</h3>
+                </div>
+                <p class="mb-1">{{pDescription}}</p>
+                <small>{{pName}}</small>
+            </nav>
+            <nav class="centered-buttons">
+                <button type="button" class="btn btn-primary button-in-list" data-toggle="modal" data-target="#modalId" v-on:click="openModal">Edit</button>
+                <button type="button" class="btn btn-danger button-in-list" v-on:click="deleteElement">Delete</button>
+            </nav>
+        </div>
     </div>
 </script>
 
+
+
+
 <script type="text/x-template" id="modalTemplate">
-    <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="modalId" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" style="width:400px" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -105,11 +73,44 @@
                         </div>
                     </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary" v-on:click="saveTask">Save Task</button>
+                <div class="modal-footer separated-buttons">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" v-on:click="saveContent">Save Task</button>
                 </div>
             </div>
         </div>
     </div>
 </script>
+
+
+
+
+
+@*<li-task v-for="form in forms" :key="form.id"
+             :p-title="form.title"
+             :p-description="form.description"
+             :p-name="form.name"
+             :p-id="form.id"
+             v-on:openmodal="passId"
+             v-on:deleteelement="parentDelete">
+    </li-task>*@
+
+@*<script type="text/x-template" id="liTaskCardTemplate">
+        <div>
+            <div class="form-list list-group-item list-group-item-action ">
+                <nav>
+                    <div>
+                        <h3 class="mb-1">{{pTitle}}</h3>
+                    </div>
+                    <p class="mb-1">{{pDescription}}</p>
+                    <small>{{pName}}</small>
+                </nav>
+                <nav class="centered-buttons">
+                    <button type="button" class="btn btn-primary button-in-list" data-toggle="modal" data-target="#modalId" v-on:click="openModal">Edit</button>
+                    <button type="button" class="btn btn-danger button-in-list" v-on:click="deleteElement">Delete</button>
+                </nav>
+            </div>
+        </div>
+    </script>*@
+
+
