@@ -2,6 +2,10 @@
 @{
     ViewBag.Title = "Index";
 }
+@* This is where we generate the li template *@
+
+
+
 <div id="app">
     <h2>ToDo - tasks</h2>
     <hr />
@@ -10,39 +14,102 @@
 
     <div class="form-container container">
 
-        <task-card v-for="form in forms"
-                   :p-title="form.title"
-                   :p-description="form.description"
-                   :p-id="form.id"
-                   :key="form.id"
-                   v-on:delete="parentDelete"
-                   v-on:update="parentUpdate">
 
-        </task-card>
+        <li-task v-for="form in forms"
+                 :p-title="form.title"
+                 :p-description="form.description"
+                 :p-name="form.name"
+                 :p-id="form.id"
+                 v-on:persist-task-in-parent="persistTaskParent"></li-task>
 
+        @*<task-card v-for="form in forms"
+                       :p-title="form.title"
+                       :p-description="form.description"
+                       :p-name="form.name"
+                       :p-id="form.id"
+                       :key="form.id"
+                       v-on:delete="parentDelete"
+                       v-on:update="parentUpdate">
 
+            </task-card>*@
 
-
-        @* This is where we generate the template *@
-
-        <script type="text/x-template" id="taskCardTemplate">
-
-            <form class="card card-body classTaskCard" style="width: 10px; padding:30px 20px;">
-                <div class="mb-3">
-                    <label class="form-label">Title</label>
-                    <input type="text" class="form-control" name="title" v-model="pTitleData" v-on:keyup="changed">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Task description</label>
-                    <textarea class="form-control" name="description" rows="3" v-model="pDescriptionData" v-on:keyup="changed"></textarea>
-                </div>
-                <button v-on:click="deleteCard" type="button" class="btn btn-danger" style="margin: 30px 20px 0px 20px ">Delete Task</button>
-            </form>
-
-        </script>
 
     </div>
 </div>
-<script>
 
+@* This is where we generate the template *@
+
+<script type="text/x-template" id="taskCardTemplate">
+
+    <form class="card card-body classTaskCard" style="width: 10px; padding:30px 20px;">
+        <div class="mb-3">
+            <label class="form-label">Title</label>
+            <input type="text" class="form-control" name="title" v-model="pTitleData" v-on:keyup="changed">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Task description</label>
+            <textarea class="form-control" name="description" rows="3" v-model="pDescriptionData" v-on:keyup="changed"></textarea>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Name</label>
+            <input type="text" class="form-control" name="name" v-model="pNameData" v-on:keyup="changed">
+        </div>
+
+        <button v-on:click="deleteCard" type="button" class="btn btn-danger" style="margin: 30px 20px 0px 20px ">Delete Task</button>
+    </form>
+
+</script>
+
+<script type="text/x-template" id="liTaskCardTemplate">
+    <div>
+        <a :href="'#'+ id" data-toggle="modal" :data-target="'#'+ id" class="list-group-item list-group-item-action flex-column align-items-start">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">{{pTitleData}}</h5>
+                @*<small>x days ago</small>*@
+            </div>
+            <p class="mb-1">{{pDescriptionData}}</p>
+            <small>{{pNameData}}</small>
+        </a>
+
+        <modal-component :id="id"
+                         :p-title="pTitleData"
+                         :p-description="pDescriptionData"
+                         :p-name="pNameData"
+                         :p-id="id"
+                         v-on:persist="persistTask">
+
+        </modal-component>
+    </div>
+</script>
+
+<script type="text/x-template" id="modalTemplate">
+    <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" style="width:400px" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title" id="exampleModalLabel">Editar Tarea</h2>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label class="col-form-label">Title</label>
+                            <input type="text" class="form-control" style="max-width:none" v-model="modalTitleData">
+                        </div>
+                        <div class="form-group">
+                            <label class="col-form-label">Task description</label>
+                            <textarea class="form-control" name="description" rows="3" style="max-width:none" v-model="modalDescriptionData"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-form-label">Name</label>
+                            <input type="text" class="form-control" style="max-width:none" v-model="modalNameData">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" v-on:click="saveTask">Save Task</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </script>

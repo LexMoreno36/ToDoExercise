@@ -12,3 +12,6 @@
 .container{
     width:2000px !important;
 }
+.form-in-modal{
+    width: 400px;
+}

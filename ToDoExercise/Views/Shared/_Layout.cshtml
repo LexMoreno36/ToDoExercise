@@ -13,32 +13,60 @@
 </head>
 <body>
 
+
     <div class="container body-content">
         @RenderBody()
     </div>
 
     <footer>
-        <script>
 
-            Vue.component('taskCard', {
+        <script>
+            Vue.component('modalComponent', {
+                data() {
+                    return {
+                        modalTitleData: this.pTitle,
+                        modalDescriptionData: this.pDescription,
+                        modalNameData: this.pName,
+                        modalId: this.pId
+                    }
+                },
+                props: ["p-title", "p-description", "p-name", "p-id"],
+                template: "#modalTemplate",
+                methods: {
+                    //deleteCard() {
+                    //    this.$emit('delete', this.pId);
+                    //},
+                    changed() {
+                        this.$emit('update', this.pTitleData, this.pDescriptionData, this.pNameData, this.id)
+                    },
+                    saveTask() {
+                        this.$emit('persist', this.modalTitleData, this.modalDescriptionData, this.modalNameData, this.modalId)
+                        //console.log(this.$emit('persist', this.modalTitleData, this.modalDescriptionData, this.modalNameData, this.modalId))
+                    }
+                },
+            })
+
+
+            Vue.component('liTask', {
                 data() {
                     return {
                         pTitleData: this.pTitle,
                         pDescriptionData: this.pDescription,
+                        pNameData: this.pName,
                         id: this.pId
                     }
                 },
-                props: ["p-title", "p-description", "p-id"],
-                template: "#taskCardTemplate",
+                props: ["p-title", "p-description", "p-name", "p-id"],
+                template: "#liTaskCardTemplate",
                 methods: {
-                    deleteCard() {
-                        this.$emit('delete', this.pId);
-                    },
-                    changed() {
-                        this.$emit('update', this.pTitleData, this.pDescriptionData, this.id)
-                    },
+                    persistTask(title, description, name, id) {
+                        this.$emit('persist-task-in-parent', title, description, name, id)
+                    }
                 },
             })
+
+
+
             var vm = new Vue({
                 el: "#app",
                 data() {
@@ -48,47 +76,67 @@
                     }
                 },
                 methods: {
+
                     createCard() {
+                        this.forms.push(this.createEmptyCardObject())
+                        this.saveLocal();
+                    },
+                    parentDelete(id) {
+                        this.forms.splice(this.getIndexFromId(id), 1)
+                        this.saveLocal();
+                    },
+                    parentUpdate(title, description, name, id) {
+                        this.forms.splice(this.getIndexFromId(id), 1, this.editFormById(title, description, name, id))
+                        this.saveLocal();
+                    },
+                    persistTaskParent(title, description, name, id) {
+                        this.forms.splice(this.getIndexFromId(id), 1, this.editFormById(title, description, name, id))
+                        this.saveLocal();
 
-                        var emptyCardObject = { title: "", description: "", id: `${this.counter++}` }
-                        this.forms.push(emptyCardObject)
+                    },
+
+
+                    saveLocal() {
                         window.localStorage.setItem('forms', JSON.stringify(this.forms))
                         window.localStorage.setItem('counter', this.counter)
                     },
-                    parentDelete(i) {
-                        var indexOf = this.forms.indexOf(this.forms.find(e => e.id == i))
-                        var temporalForms = JSON.parse(window.localStorage.getItem('forms'))
-                        temporalForms.splice(indexOf, 1)
-                        window.localStorage.setItem('forms', JSON.stringify(temporalForms))
-                        window.localStorage.setItem('counter', this.counter)
-                        this.forms = JSON.parse(window.localStorage.getItem('forms'))
+                    getLocal() {
+                        return JSON.parse(window.localStorage.getItem('forms'))
+                    },
+                    getIndexFromId(identificator) {
+                        return this.forms.indexOf(this.forms.find(e => e.id == identificator))
+                    },
+                    createEmptyCardObject() {
+                        return { title: "", description: "", name: "", id: `${this.counter++}`, date: `${this.getLocalDate()}` }
+                    },
+                    editFormById(title, description, name, id) {
+                        var res = this.forms.find(e => e.id == id)
+                        res.title = title
+                        res.description = description
+                        res.name = name
+                        return res
+                    },
+                    getLocalDate() {
+                        var date = new Date()
+                        return date
+                    },
+                    lastModified(date) {
+                        //var date = new Date()
+
 
                     },
-                    parentUpdate(title, description, i) {
-
-                        
-                        var indexOf = this.forms.indexOf(this.forms.find(e => e.id == i))
-                        var formToEdit = this.forms.find(e => e.id == i)
-                        formToEdit.title = title
-                        formToEdit.description = description
-
-                        this.forms.splice(indexOf, 1, formToEdit)
-
-                        window.localStorage.setItem('forms', JSON.stringify(this.forms))
-                        window.localStorage.setItem('counter', this.counter)
-                    },
-
+                    loadLocalData() {
+                        if (window.localStorage.getItem('forms')) {
+                            this.forms = JSON.parse(window.localStorage.getItem('forms'))
+                            this.counter = window.localStorage.getItem('counter')
+                        }
+                    }
                 },
                 mounted() {
-                    if (window.localStorage.getItem('forms')) {
-                        this.forms = JSON.parse(window.localStorage.getItem('forms'))
-                        this.counter = window.localStorage.getItem('counter')
-                    }
+                    this.loadLocalData();
+                    //this.lastModified();
                 }
             })
-                                                                            //vm.$watch('forms', (lastestValue, beforeValue) => {
-                                                                            //    window.localStorage.setItem('forms', JSON.stringify(lastestValue));
-                                                                            //}, { deep: true })
         </script>
     </footer>
 
