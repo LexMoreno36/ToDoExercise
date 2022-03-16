@@ -32,9 +32,10 @@
                         modalDescriptionData: this.mDescription,
                         modalNameData: this.mName,
                         modalIdData: this.mId,
+
                     }
                 },
-                props: ["m-title", "m-description", "m-name", "m-id"],
+                props: ["m-title", "m-description", "m-name", "m-id",],
                 template: "#modalTemplate",
                 methods: {
                     saveContent() {
@@ -45,14 +46,43 @@
                     }
                 },
                 watch: {
+                    //$data: {
+                    //    deep: true,
+                    //    handler() {
+                    //        console.log("props changed")
+                    //    }
+                    //},
+                    //$props: {
+                    //    deep: true,
+                    //    handler(val) {
+                            
+                    //    }
+                    //},
+                    mTitle(val, oldVal) {
+                        if (val !== oldVal) {
+                            this.modalTitleData = val
+                        }
+                    },
+                    mDescription(val, oldVal) {
+                        if (val !== oldVal) {
+                            this.modalDescriptionData = val
+                        }
+                    },
+                    mName(val, oldVal) {
+                        if (val !== oldVal) {
+                            this.modalNameData = val
+                        }
+                    },
                     mId(val, oldVal) {
-                        if (val !== oldVal) { modalIdData = val }
-                    }
+                        if (val !== oldVal) {
+                            this.modalIdData = val
+                        }
+                    },
                 }
             })
 
             Vue.component('liTask', {
-                props: ["p-forms"],
+                props: ["p-forms", "p-input"],
                 template: "#liTaskCardTemplate",
                 methods: {
                     deleteElement() {
@@ -60,7 +90,7 @@
                     },
                     childUpdate(title, description, name, id) {
                         this.$emit('parentupdate', title, description, name, id)
-                    }
+                    },
                 },
             })
 
@@ -68,11 +98,12 @@
                 el: "#app",
                 data() {
                     return {
-                        forms: [],
-                        counter: 0,
                         modalInput: {
                             title: "", description: "", name: "", id: ""
                         },
+                        forms: [],
+                        counter: 0,
+
                     }
                 },
 
@@ -90,7 +121,12 @@
                         this.forms.splice(this.getIndexFromId(id), 1, this.editFormById(title, description, name, id))
                         this.saveLocal();
                     },
-
+                    saveModalFormData(title, description, name, id) {
+                        this.modalInput.title = title
+                        this.modalInput.description = description
+                        this.modalInput.name = name
+                        this.modalInput.id = id
+                    },
 
 
                     saveLocal() {

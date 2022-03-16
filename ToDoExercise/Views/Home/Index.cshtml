@@ -11,11 +11,14 @@
     <div class="form-container container">
 
         <li-task :p-forms="forms"
+                 :p-input="modalInput"
                  v-on:deleteelement="parentDelete"
-                 v-on:parentupdate="parentUpdate">
+                 v-on:parentupdate="parentUpdate"
+                 v-on:senddataparent="saveModalFormData">
         </li-task>
 
         <modal-component :m-id="counter"
+                         
                          v-on:savecontent="parentUpdate">
         </modal-component>
 
@@ -43,21 +46,21 @@
                     <small>{{form.name}}</small>
                 </nav>
                 <nav class="centered-buttons">
-                    <button type="button" class="btn btn-primary button-in-list" data-toggle="modal" :data-target="'#' + form.id" @*v-on:click="openModal"*@>Edit</button>
+                    <button type="button" class="btn btn-primary button-in-list" data-toggle="modal" :data-target="'#' + form.id" v-on:click="$emit('senddataparent', form.title, form.description, form.name, form.id)" >Edit</button>
                     <button type="button" class="btn btn-danger button-in-list" v-on:click="deleteElement">Delete</button>
                 </nav>
             </div>
-            <modal-component
-                             :m-title="form.title"
-                             :m-name="form.name"
-                             :m-id="form.id"
-                             :m-description="form.description"
-                             v-on:savecontent="childUpdate">
-            </modal-component>
+
         </div>
-        
+        <modal-component :m-title="pInput.title"
+                         :m-description="pInput.description"
+                         :m-name="pInput.name"
+                         :m-id="pInput.id"
+                         v-on:savecontent="childUpdate">
+
+        </modal-component>
     </div>
-    
+
 </script>
 
 
