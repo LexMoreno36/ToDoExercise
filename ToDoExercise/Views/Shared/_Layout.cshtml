@@ -39,45 +39,25 @@
                 template: "#modalTemplate",
                 methods: {
                     saveContent() {
-
+                        
                         this.$forceUpdate()
-                        this.$emit('savecontent', this.modalTitleData, this.modalDescriptionData, this.modalNameData, this.mId)
+                        this.$emit('savecontent', this.modalTitleData, this.modalDescriptionData, this.modalNameData, this.modalIdData)
+                        
 
                     }
                 },
                 watch: {
-                    //$data: {
-                    //    deep: true,
-                    //    handler() {
-                    //        console.log("props changed")
-                    //    }
-                    //},
-                    //$props: {
-                    //    deep: true,
-                    //    handler(val) {
-                            
-                    //    }
-                    //},
-                    mTitle(val, oldVal) {
-                        if (val !== oldVal) {
-                            this.modalTitleData = val
+                    $props: {
+                        deep: true,
+                        handler(val) {
+                            console.log("something changed")
+                            this.modalIdData = val.mId
+                            this.modalTitleData = val.mTitle
+                            this.modalDescriptionData = val.mDescription
+                            this.modalNameData = val.mName
                         }
                     },
-                    mDescription(val, oldVal) {
-                        if (val !== oldVal) {
-                            this.modalDescriptionData = val
-                        }
-                    },
-                    mName(val, oldVal) {
-                        if (val !== oldVal) {
-                            this.modalNameData = val
-                        }
-                    },
-                    mId(val, oldVal) {
-                        if (val !== oldVal) {
-                            this.modalIdData = val
-                        }
-                    },
+
                 }
             })
 
@@ -85,10 +65,9 @@
                 props: ["p-forms", "p-input"],
                 template: "#liTaskCardTemplate",
                 methods: {
-                    deleteElement() {
-                        this.$emit('deleteelement', this.pId)
-                    },
                     childUpdate(title, description, name, id) {
+                        
+                        console.log("is this working?")
                         this.$emit('parentupdate', title, description, name, id)
                     },
                 },
@@ -98,9 +77,7 @@
                 el: "#app",
                 data() {
                     return {
-                        modalInput: {
-                            title: "", description: "", name: "", id: ""
-                        },
+                        modalInput: {title: "", description: "", name: "", id: ""},
                         forms: [],
                         counter: 0,
 
@@ -110,18 +87,22 @@
                 methods: {
 
                     createCard() {
+                        this.incrementCounter()
                         this.forms.push(this.createEmptyCardObject())
                         this.saveLocal();
                     },
                     parentDelete(id) {
+                       
                         this.forms.splice(this.getIndexFromId(id), 1)
                         this.saveLocal();
                     },
                     parentUpdate(title, description, name, id) {
+                        
                         this.forms.splice(this.getIndexFromId(id), 1, this.editFormById(title, description, name, id))
                         this.saveLocal();
                     },
                     saveModalFormData(title, description, name, id) {
+                        
                         this.modalInput.title = title
                         this.modalInput.description = description
                         this.modalInput.name = name
@@ -140,14 +121,14 @@
                         return this.forms.indexOf(this.forms.find(e => e.id == identificator))
                     },
                     createEmptyCardObject() {
-                        return { title: "", description: "", name: "", id: `${this.counter}`, date: `${this.getLocalDate()}` }
-                        this.incrementCounter()
-                        this.saveLocal();
+                        
+                        return { title: "", description: "", name: "", id: this.counter, date: this.getLocalDate() }
                     },
                     incrementCounter() {
                         this.counter++
                     },
                     editFormById(title, description, name, id) {
+                        
                         var res = this.forms.find(e => e.id == id)
                         res.title = title
                         res.description = description

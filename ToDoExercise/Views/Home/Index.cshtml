@@ -18,7 +18,9 @@
         </li-task>
 
         <modal-component :m-id="counter"
-                         
+                         m-title=""
+                         m-description=""
+                         m-name=""
                          v-on:savecontent="parentUpdate">
         </modal-component>
 
@@ -47,7 +49,7 @@
                 </nav>
                 <nav class="centered-buttons">
                     <button type="button" class="btn btn-primary button-in-list" data-toggle="modal" :data-target="'#' + form.id" v-on:click="$emit('senddataparent', form.title, form.description, form.name, form.id)" >Edit</button>
-                    <button type="button" class="btn btn-danger button-in-list" v-on:click="deleteElement">Delete</button>
+                    <button type="button" class="btn btn-danger button-in-list" v-on:click="$emit('deleteelement', form.id)">Delete</button>
                 </nav>
             </div>
 
@@ -67,7 +69,7 @@
 
 
 <script type="text/x-template" id="modalTemplate">
-    <div class="modal fade" :id="mId" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" :id="modalIdData" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" style="width:400px" role="document">
             <div class="modal-content">
                 <div class="modal-header">
