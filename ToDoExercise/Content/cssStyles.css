@@ -34,3 +34,10 @@
     align-items: center;
     justify-content: space-between;
 }
+.sortable-list:hover{
+    cursor: grab;
+}
+.sortable-list-moz-drag-over {
+    cursor: grabbing;
+    color: red;
+}

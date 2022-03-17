@@ -28,33 +28,29 @@
             Vue.component('modalComponent', {
                 data() {
                     return {
-                        modalTitleData: this.mTitle,
-                        modalDescriptionData: this.mDescription,
-                        modalNameData: this.mName,
-                        modalIdData: this.mId,
-
+                        modal: {
+                            title: this.title,
+                            description: this.description,
+                            name: this.name,
+                            id: this.id,
+                        }
                     }
                 },
-                props: ["m-title", "m-description", "m-name", "m-id",],
+                props: ["title", "description", "name", "id",],
                 template: "#modalTemplate",
                 methods: {
                     saveContent() {
-                        
                         this.$forceUpdate()
-                        this.$emit('savecontent', this.modalTitleData, this.modalDescriptionData, this.modalNameData, this.modalIdData)
-                        
-
+                        this.$emit('savecontent', this.modal)
                     }
                 },
                 watch: {
                     $props: {
                         deep: true,
                         handler(val) {
-                            console.log("something changed")
-                            this.modalIdData = val.mId
-                            this.modalTitleData = val.mTitle
-                            this.modalDescriptionData = val.mDescription
-                            this.modalNameData = val.mName
+                            this.modal = Object.assign({}, this.modal, val)
+                            //en este caso no podemos hacer this.modal = val, ya que se pierden las referencias y nos devolvería un error
+                            //this.modal = val
                         }
                     },
 
@@ -65,10 +61,9 @@
                 props: ["p-forms", "p-input"],
                 template: "#liTaskCardTemplate",
                 methods: {
-                    childUpdate(title, description, name, id) {
-                        
+                    childUpdate(modal) {
                         console.log("is this working?")
-                        this.$emit('parentupdate', title, description, name, id)
+                        this.$emit('parentupdate', modal)
                     },
                 },
             })
@@ -77,7 +72,7 @@
                 el: "#app",
                 data() {
                     return {
-                        modalInput: {title: "", description: "", name: "", id: ""},
+                        modalInput: {},
                         forms: [],
                         counter: 0,
 
@@ -92,21 +87,15 @@
                         this.saveLocal();
                     },
                     parentDelete(id) {
-                       
                         this.forms.splice(this.getIndexFromId(id), 1)
                         this.saveLocal();
                     },
-                    parentUpdate(title, description, name, id) {
-                        
-                        this.forms.splice(this.getIndexFromId(id), 1, this.editFormById(title, description, name, id))
+                    parentUpdate(modal) {
+                        this.forms.splice(this.getIndexFromId(modal.id), 1, this.editFormById(modal.title, modal.description, modal.name, modal.id))
                         this.saveLocal();
                     },
-                    saveModalFormData(title, description, name, id) {
-                        
-                        this.modalInput.title = title
-                        this.modalInput.description = description
-                        this.modalInput.name = name
-                        this.modalInput.id = id
+                    saveModalFormData(form) {
+                        this.modalInput = form
                     },
 
 
@@ -121,14 +110,14 @@
                         return this.forms.indexOf(this.forms.find(e => e.id == identificator))
                     },
                     createEmptyCardObject() {
-                        
+
                         return { title: "", description: "", name: "", id: this.counter, date: this.getLocalDate() }
                     },
                     incrementCounter() {
                         this.counter++
                     },
                     editFormById(title, description, name, id) {
-                        
+
                         var res = this.forms.find(e => e.id == id)
                         res.title = title
                         res.description = description
@@ -151,6 +140,11 @@
                 mounted() {
                     this.loadLocalData();
                 }
+            })
+
+
+            new Sortable(example1, {
+                animation: 150,
             })
         </script>
     </footer>

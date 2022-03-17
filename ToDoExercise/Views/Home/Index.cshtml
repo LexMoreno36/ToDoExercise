@@ -17,10 +17,10 @@
                  v-on:senddataparent="saveModalFormData">
         </li-task>
 
-        <modal-component :m-id="counter"
-                         m-title=""
-                         m-description=""
-                         m-name=""
+        <modal-component :id="counter"
+                         title=""
+                         description=""
+                         name=""
                          v-on:savecontent="parentUpdate">
         </modal-component>
 
@@ -37,30 +37,32 @@
 
 <script type="text/x-template" id="liTaskCardTemplate">
     <div>
-        <div v-for="form in pForms">
+        <div id="example1" class="sortable-list">
+            <div v-for="form in pForms" >
 
-            <div class="form-list list-group-item list-group-item-action ">
-                <nav>
-                    <div>
-                        <h3 class="mb-1">{{form.title}}</h3>
-                    </div>
-                    <p class="mb-1">{{form.description}}</p>
-                    <small>{{form.name}}</small>
-                </nav>
-                <nav class="centered-buttons">
-                    <button type="button" class="btn btn-primary button-in-list" data-toggle="modal" :data-target="'#' + form.id" v-on:click="$emit('senddataparent', form.title, form.description, form.name, form.id)" >Edit</button>
-                    <button type="button" class="btn btn-danger button-in-list" v-on:click="$emit('deleteelement', form.id)">Delete</button>
-                </nav>
+                <div class="form-list list-group-item list-group-item-action ">
+                    <nav>
+                        <div>
+                            <h3 class="mb-1">{{form.title}}</h3>
+                        </div>
+                        <p class="mb-1">{{form.description}}</p>
+                        <small>{{form.name}}</small>
+                    </nav>
+                    <nav class="centered-buttons">
+                        <button type="button" class="btn btn-primary button-in-list" data-toggle="modal" :data-target="'#' + form.id" v-on:click="$emit('senddataparent', form)">Edit</button>
+                        <button type="button" class="btn btn-danger button-in-list" v-on:click="$emit('deleteelement', form.id)">Delete</button>
+                    </nav>
+                </div>
+
             </div>
-
         </div>
-        <modal-component :m-title="pInput.title"
-                         :m-description="pInput.description"
-                         :m-name="pInput.name"
-                         :m-id="pInput.id"
-                         v-on:savecontent="childUpdate">
+            <modal-component :title="pInput.title"
+                             :description="pInput.description"
+                             :name="pInput.name"
+                             :id="pInput.id"
+                             v-on:savecontent="childUpdate">
 
-        </modal-component>
+            </modal-component>
     </div>
 
 </script>
@@ -69,7 +71,7 @@
 
 
 <script type="text/x-template" id="modalTemplate">
-    <div class="modal fade" :id="modalIdData" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" :id="modal.id" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" style="width:400px" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -79,15 +81,15 @@
                     <form>
                         <div class="form-group">
                             <label class="col-form-label">Title</label>
-                            <input type="text" class="form-control" style="max-width:none" v-model="modalTitleData">
+                            <input type="text" class="form-control" style="max-width:none" v-model="modal.title">
                         </div>
                         <div class="form-group">
                             <label class="col-form-label">Task description</label>
-                            <textarea class="form-control" name="description" rows="3" style="max-width:none" v-model="modalDescriptionData"></textarea>
+                            <textarea class="form-control" name="description" rows="3" style="max-width:none" v-model="modal.description"></textarea>
                         </div>
                         <div class="form-group">
                             <label class="col-form-label">Name</label>
-                            <input type="text" class="form-control" style="max-width:none" v-model="modalNameData">
+                            <input type="text" class="form-control" style="max-width:none" v-model="modal.name">
                         </div>
                     </form>
                 </div>
