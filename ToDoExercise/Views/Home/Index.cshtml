@@ -2,6 +2,7 @@
 @{
     ViewBag.Title = "Index";
 }
+
 <div id="app">
     <h2>ToDo - tasks</h2>
     <hr />
@@ -10,94 +11,27 @@
 
     <div class="form-container container">
 
-        <li-task :p-forms="forms"
-                 :p-input="modalInput"
-                 v-on:deleteelement="parentDelete"
-                 v-on:parentupdate="parentUpdate"
-                 v-on:senddataparent="saveModalFormData">
-        </li-task>
+        <litask :p-forms="forms"
+                :p-input="modalInput"
+                v-on:deleteelement="parentDelete"
+                v-on:parentupdate="parentUpdate"
+                v-on:senddataparent="saveModalFormData"
+                v-on:saveorder="saveOrder">
+        </litask>
 
-        <modal-component :id="counter"
-                         title=""
-                         description=""
-                         name=""
-                         v-on:savecontent="parentUpdate">
-        </modal-component>
+        @* Este componente es el que se utilizará con el botón "createCard" *@
+
+        <modalcomponent :id="counter"
+                        title=""
+                        description=""
+                        name=""
+                        v-on:savecontent="parentUpdate">
+        </modalcomponent>
 
     </div>
 </div>
 
+@{Html.RenderPartial("~/Views/Vue/Components/_liTask.cshtml");}
+@{Html.RenderPartial("~/Views/Vue/Components/_modalComponent.cshtml");}
 
-
-
-
-
-
-
-
-<script type="text/x-template" id="liTaskCardTemplate">
-    <div>
-        <div id="example1" class="sortable-list">
-            <div v-for="form in pForms" >
-
-                <div class="form-list list-group-item list-group-item-action ">
-                    <nav>
-                        <div>
-                            <h3 class="mb-1">{{form.title}}</h3>
-                        </div>
-                        <p class="mb-1">{{form.description}}</p>
-                        <small>{{form.name}}</small>
-                    </nav>
-                    <nav class="centered-buttons">
-                        <button type="button" class="btn btn-primary button-in-list" data-toggle="modal" :data-target="'#' + form.id" v-on:click="$emit('senddataparent', form)">Edit</button>
-                        <button type="button" class="btn btn-danger button-in-list" v-on:click="$emit('deleteelement', form.id)">Delete</button>
-                    </nav>
-                </div>
-
-            </div>
-        </div>
-            <modal-component :title="pInput.title"
-                             :description="pInput.description"
-                             :name="pInput.name"
-                             :id="pInput.id"
-                             v-on:savecontent="childUpdate">
-
-            </modal-component>
-    </div>
-
-</script>
-
-
-
-
-<script type="text/x-template" id="modalTemplate">
-    <div class="modal fade" :id="modal.id" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" style="width:400px" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 class="modal-title" id="exampleModalLabel">Editar Tarea</h2>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="form-group">
-                            <label class="col-form-label">Title</label>
-                            <input type="text" class="form-control" style="max-width:none" v-model="modal.title">
-                        </div>
-                        <div class="form-group">
-                            <label class="col-form-label">Task description</label>
-                            <textarea class="form-control" name="description" rows="3" style="max-width:none" v-model="modal.description"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-form-label">Name</label>
-                            <input type="text" class="form-control" style="max-width:none" v-model="modal.name">
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer separated-buttons">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal" v-on:click="saveContent">Save Task</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</script>
+@Scripts.Render("~/Content/app.js")
