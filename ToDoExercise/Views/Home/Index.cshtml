@@ -13,8 +13,8 @@
 
         <litask :p-forms="forms"
                 :p-input="modalInput"
-                v-on:deleteelement="parentDelete"
-                v-on:parentupdate="parentUpdate"
+                v-on:deleteelement="deleteTaskFromId"
+                v-on:parentupdate="updateTaskFromObject"
                 v-on:senddataparent="saveModalFormData"
                 v-on:saveorder="saveOrder">
         </litask>
@@ -25,7 +25,8 @@
                         title=""
                         description=""
                         name=""
-                        v-on:savecontent="parentUpdate">
+                        v-on:savecontent="updateTaskFromObject"
+                        v-on:exitwithoutsaving="deleteTaskFromId">
         </modalcomponent>
 
     </div>

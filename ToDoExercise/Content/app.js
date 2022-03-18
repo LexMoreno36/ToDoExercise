@@ -20,11 +20,11 @@
             this.forms.push(this.createEmptyCardObject())
             this.saveLocal();
         },
-        parentDelete(id) {
+        deleteTaskFromId(id) {
             this.forms.splice(this.getIndexFromId(id), 1)
             this.saveLocal();
         },
-        parentUpdate(modal) {
+        updateTaskFromObject(modal) {
             this.forms.splice(this.getIndexFromId(modal.id), 1, this.editFormById(modal.title, modal.description, modal.name, modal.id))
             this.saveLocal();
         },
