@@ -1,10 +1,11 @@
-﻿var app = new Vue({
+﻿
+var app = new Vue({
 
     el: "#app",
     components: {
         litask,
         modalcomponent,
-        draggable: window['vuedraggable']
+        draggable: window['vuedraggable']      //esto se hace ya que vuedraggable lo utilizamos a través de cdn, con lo que no había otra forma de utilizarlo...
     },
     data() {
         return {

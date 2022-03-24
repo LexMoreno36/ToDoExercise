@@ -17,16 +17,17 @@
                 v-on:parentupdate="updateTaskFromObject"
                 v-on:senddataparent="saveModalFormData"
                 v-on:saveorder="saveOrder">
+
         </litask>
 
         @* Este componente es el que se utilizará con el botón "createCard" *@
 
+        @* Los valores de las props de modalcomponent estan establecidas por defecto a '', por eso no hace falta darles valor al llamar al componente por primera vez... *@
+
         <modalcomponent :id="counter"
-                        title=""
-                        description=""
-                        name=""
                         v-on:savecontent="updateTaskFromObject"
                         v-on:exitwithoutsaving="deleteTaskFromId">
+
         </modalcomponent>
 
     </div>
