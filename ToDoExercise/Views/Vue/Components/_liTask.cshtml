@@ -27,6 +27,7 @@
             </draggable>
         </div>
         <modalcomponent :task="pInput"
+                        :id="pInput.id"
                         v-on:savecontent="childUpdate"
                         v-on:exitwithoutsaving="">
 

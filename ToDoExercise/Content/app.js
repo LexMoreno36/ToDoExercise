@@ -15,13 +15,6 @@ var app = new Vue({
             blankTask: { title: "", description: "", name: "", id: "" },
         }
     },
-    computed: {
-        computedBlankTask: {
-            get() {
-                return { title: "", description: "", name: "", id: this.counter }
-            }
-        }
-    },
     methods: {
 
         createCard() {
