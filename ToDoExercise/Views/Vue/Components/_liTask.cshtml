@@ -26,10 +26,7 @@
                 </div>
             </draggable>
         </div>
-        <modalcomponent :title="pInput.title"
-                        :description="pInput.description"
-                        :name="pInput.name"
-                        :id="pInput.id"
+        <modalcomponent :task="pInput"
                         v-on:savecontent="childUpdate"
                         v-on:exitwithoutsaving="">
 

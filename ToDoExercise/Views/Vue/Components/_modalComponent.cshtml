@@ -1,6 +1,6 @@
 ﻿
 <script type="text/x-template" id="modalTemplate">
-    <div class="modal fade" :id="modal.id" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" :id="task.id" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" style="width:400px" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -10,21 +10,21 @@
                     <form>
                         <div class="form-group">
                             <label class="col-form-label">Title</label>
-                            <input type="text" class="form-control" style="max-width:none" v-model="modal.title">
+                            <input type="text" class="form-control" style="max-width:none" v-model="modalComputed.title">
                         </div>
                         <div class="form-group">
                             <label class="col-form-label">Task description</label>
-                            <textarea class="form-control" name="description" rows="3" style="max-width:none" v-model="modal.description"></textarea>
+                            <textarea class="form-control" name="description" rows="3" style="max-width:none" v-model="modalComputed.description"></textarea>
                         </div>
                         <div class="form-group">
                             <label class="col-form-label">Name</label>
-                            <input type="text" class="form-control" style="max-width:none" v-model="modal.name">
+                            <input type="text" class="form-control" style="max-width:none" v-model="modalComputed.name">
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer separated-buttons">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal" v-on:click="exitWithoutSaving">Cancel</button>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal" v-on:click="saveContent">Save Task</button>
+                    @*<button type="button" class="btn btn-primary" data-dismiss="modal" v-on:click="saveContent">Save Task</button>*@
                 </div>
             </div>
         </div>
@@ -32,56 +32,77 @@
 </script>
 
 <script>
+    
     var modalcomponent = Vue.component("modalcomponent", {
-        data() {
-            return {
-                modal: {
-                    title: this.title,
-                    description: this.description,
-                    name: this.name,
-                    id: this.id,
-                }
-            }
-        },
+        //data() {
+        //    return {
+        //        modal: {
+        //            title: this.title,
+        //            description: this.description,
+        //            name: this.name,
+        //            id: this.id,
+        //        }
+        //    }
+        //},
         props: {
-            title: {
-                type: String,
-                default: '',
+            task: {
+                type: Object,
+                required: true,
             },
-            description: {
-                type: String,
-                default: '',
-            },
-            name: {
-                type: String,
-                default: '',
-            },
-            id: {
 
-            }
+            //title: {
+            //    type: String,
+            //    default: '',
+            //},
+            //description: {
+            //    type: String,
+            //    default: '',
+            //},
+            //name: {
+            //    type: String,
+            //    default: '',
+            //},
+            //id: {}
         },
         template: "#modalTemplate",
         methods: {
-            saveContent() {
-                this.$forceUpdate()
-                this.$emit('savecontent', this.modal)
-            },
+            //saveContent() {
+            //    this.$forceUpdate()
+            //    this.$emit('savecontent', this.modal)
+            //},
             exitWithoutSaving() {
-                this.$emit('exitwithoutsaving', this.modal.id)
+                this.$emit('exitwithoutsaving', this.modalComputed.id)
+            }
+        },
+        computed: {
+            modalComputed: {
+                get() { return this.task },
+                //set(modalComputed) {
+                //    console.log("hello")
+                //    this.$emit('savecontent', modalComputed)
+                //    this.$forceUpdate()
+                //}
             }
         },
 
         //***************    se queda observando las props del modal (al abrir un modal de otro id, las props cambian)    ****************
 
         watch: {
-            $props: {
+            modalComputed: {
                 deep: true,
-                handler(val) {
-                    this.modal = Object.assign({}, this.modal, val)
-                    //en este caso no podemos hacer this.modal = val, ya que se pierden las referencias y nos devolvería un error
-                    //this.modal = val
+                handler(newVal) {
+                    this.$emit('savecontent', newVal)
+                    console.log(newVal)
                 }
-            },
+            }
+            //$props: {
+            //    deep: true,
+            //    handler(val) {
+            //        this.modal = Object.assign({}, this.modal, val)
+            //        //en este caso no podemos hacer this.modal = val, ya que se pierden las referencias y nos devolvería un error
+            //        //this.modal = val
+            //    }
+            //},
 
         }
     })

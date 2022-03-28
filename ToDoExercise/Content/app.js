@@ -11,7 +11,15 @@ var app = new Vue({
         return {
             modalInput: {},
             forms: [],
-            counter: 0
+            counter: 0,
+            blankTask: { title: "", description: "", name: "", id: "" },
+        }
+    },
+    computed: {
+        computedBlankTask: {
+            get() {
+                return { title: "", description: "", name: "", id: this.counter }
+            }
         }
     },
     methods: {
@@ -50,7 +58,7 @@ var app = new Vue({
             return this.forms.indexOf(this.forms.find(e => e.id == identificator))
         },
         createEmptyCardObject() {
-            return { title: "", description: "", name: "", id: this.counter, date: this.getLocalDate() }
+            return { title: "", description: "", name: "", id: this.counter }
         },
         incrementCounter() {
             this.counter++
@@ -62,9 +70,6 @@ var app = new Vue({
             res.description = description
             res.name = name
             return res
-        },
-        getLocalDate() {
-            return new Date();
         },
         loadLocalData() {
             if (window.localStorage.getItem('forms')) {
