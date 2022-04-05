@@ -1,0 +1,59 @@
+﻿
+<script type="text/x-template" id="liTaskTemplate">
+
+
+    <div>
+        <div id="example1" class="sortable-list">
+            <draggable :list="pForms"
+                       v-on:end="saveOrder"
+                       v-on:start="">
+                <div v-for="form in pForms" :key="form.id" draggable="true">
+
+                    <div class="form-list list-group-item list-group-item-action ">
+                        <nav>
+                            <div>
+                                <h3 class="mb-1">{{form.title}}</h3>
+                            </div>
+                            <p class="mb-1">{{form.description}}</p>
+                            <small>{{form.name}}</small>
+                        </nav>
+                        <nav class="centered-buttons">
+                            <button type="button" class="btn btn-primary button-in-list" data-toggle="modal" :data-target="'#' + form.id" v-on:click="$emit('senddataparent', form)">Edit</button>
+                            <button type="button" class="btn btn-danger button-in-list" v-on:click="$emit('deleteelement', form.id)">Delete</button>
+                        </nav>
+                    </div>
+
+                </div>
+            </draggable>
+        </div>
+        <modalcomponent :title="pInput.title"
+                        :description="pInput.description"
+                        :name="pInput.name"
+                        :id="pInput.id"
+                        v-on:savecontent="childUpdate"
+                        v-on:exitwithoutsaving="">
+
+        </modalcomponent>
+    </div>
+
+</script>
+
+<script>
+
+    var litask = Vue.component("litask", {
+        props: ["p-forms", "p-input"],
+        template: "#liTaskTemplate",
+        methods: {
+            childUpdate(modal) {
+                this.$emit('parentupdate', modal)
+            },
+
+            //****    guarda el orden de las tareas simplemente guardando el objeto con el orden ya cambiado (dinámicamente por vue)    ****
+
+            saveOrder() {
+                this.$emit('saveorder')
+            },
+        },
+    })
+
+</script>
